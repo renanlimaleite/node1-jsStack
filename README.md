@@ -1,0 +1,2 @@
+- [x] Add nodemon to work with development mode
+- [x] Add eslint integration for code organization
