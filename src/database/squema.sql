@@ -13,3 +13,14 @@ CREATE TABLE IF NOT EXISTS categories (
   id UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4(),
   name VARCHAR NOT NULL
 );
+/*
+\dt -> list tables
+*/
+CREATE TABLE IF NOT EXISTS contacts (
+  id UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4(),
+  name VARCHAR NOT NULL,
+  email VARCHAR UNIQUE,
+  phone VARCHAR,
+  categorie_id UUID,
+  FOREIGN KEY(categorie_id) REFERENCES categories(id)
+);
