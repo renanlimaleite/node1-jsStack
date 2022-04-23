@@ -7,37 +7,13 @@
  *   that keeps the logic of data.
  * - Our controller should have only rules about the application itself
  */
-const { v4 } = require('uuid')
 
 const db = require('../../database')
 
-let contacts = [
-  {
-    id: v4(),
-    name: 'Renan',
-    email: 'renan@gmail.com',
-    phone: '21965152458',
-    category_id: v4()
-  },
-  {
-    id: v4(),
-    name: 'Fulano',
-    email: 'fulano@gmail.com',
-    phone: '21960152008',
-    category_id: v4()
-  },
-  {
-    id: v4(),
-    name: 'Ciclano',
-    email: 'ciclano@gmail.com',
-    phone: '21965004580',
-    category_id: v4()
-  }
-]
-
 class ContactsRepositories {
-  async findAll () {
-    const rows = await db.query('SELECT * FROM contacts')
+  async findAll (orderBy = 'ASC') {
+    const direction = orderBy.toUpperCase() === 'DESC' ? 'DESC' : 'ASC'
+    const rows = await db.query(`SELECT * FROM contacts ORDER BY name ${direction}`)
     return rows
   }
 
@@ -61,27 +37,19 @@ class ContactsRepositories {
     return row
   }
 
-  update (id, { name, email, phone, category_id }) {
-    return new Promise((resolve) => {
-      const updatedContact = {
-        id,
-        name,
-        email,
-        phone,
-        category_id
-      }
-
-      contacts = contacts.map(contact => contact.id === id ? updatedContact : contact)
-
-      resolve(updatedContact)
-    })
+  async update (id, { name, email, phone, categorie_id }) {
+    const [row] = await db.query(`
+    UPDATE contacts
+    SET name = $1, email = $2, phone = $3, categorie_id = $4
+    WHERE id = $5
+    RETURNING *
+  `, [name, email, phone, categorie_id, id])
+    return row
   }
 
-  delete (id) {
-    return new Promise((resolve) => {
-      contacts = contacts.filter(contact => contact.id !== id)
-      resolve()
-    })
+  async delete (id) {
+    const deleteOp = await db.query('DELETE FROM contacts WHERE id = $1', [id])
+    return deleteOp
   }
 }
 
