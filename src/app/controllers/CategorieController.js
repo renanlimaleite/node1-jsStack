@@ -1,4 +1,5 @@
 const CategoriesRepositories = require('../repositories/CategoriesRepositories')
+const isValidUUID = require('../lib/isValidUUID')
 
 class CategorieController {
   async index (request, response) {
@@ -23,6 +24,11 @@ class CategorieController {
 
   async update (request, response) {
     const { id } = request.params
+
+    if (!isValidUUID(id)) {
+      return response.status(400).json({ error: 'Id is invalid' })
+    }
+
     const { name } = request.body
 
     const category = await CategoriesRepositories.findById(id)
