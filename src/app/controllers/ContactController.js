@@ -48,7 +48,7 @@ class ContactController {
   // update -> to update a register
   async update (request, response) {
     const { id } = request.params
-    const { name, email, phone, category_id } = request.body
+    const { name, email, phone, categorie_id } = request.body
 
     if (!name) {
       response.status(400).json({ error: 'Name is required' })
@@ -65,7 +65,7 @@ class ContactController {
       return response.status(400).json({ error: 'E-mail already exists' })
     }
 
-    const contact = await ContactsRepositories.update(id, { name, email, phone, category_id })
+    const contact = await ContactsRepositories.update(id, { name, email, phone, categorie_id })
 
     return response.json(contact)
   }
