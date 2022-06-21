@@ -15,7 +15,7 @@ class ContactController {
     const contact = await ContactsRepositories.findById(id)
 
     if (!contact) {
-      return response.status(404).json({ error: 'User not found' })
+      return response.status(404).json({ error: 'Contact not found' })
     }
 
     return response.json(contact)
@@ -42,7 +42,7 @@ class ContactController {
       category_id
     })
 
-    return response.json(contact)
+    return response.status(201).json(contact)
   }
 
   // update -> to update a register
@@ -56,7 +56,7 @@ class ContactController {
 
     const contactExists = await ContactsRepositories.findById(id)
     if (!contactExists) {
-      return response.status(400).json({ error: 'User not found' })
+      return response.status(404).json({ error: 'User not found' })
     }
 
     const contactByEmail = await ContactsRepositories.findByEmail(email)
